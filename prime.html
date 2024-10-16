@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Number Generator</title>
+</head>
+<body>
+    <h1>Prime Number Generator</h1>
+
+    <label for="start">Enter the start of the range: </label>
+    <input type="number" id="start" placeholder="Start" />
+
+    <br><br>
+
+    <label for="end">Enter the end of the range: </label>
+    <input type="number" id="end" placeholder="End" />
+
+    <br><br>
+
+    <button onclick="generatePrimes()">Generate Primes</button>
+
+    <div id="error" style="color:red; margin-top:10px;"></div>
+    <div id="result" style="margin-top:10px;"></div>
+
+    <script>
+        // Prime number generator using a JavaScript generator function
+        function* primeGenerator(start, end) {
+            for (let num = start; num <= end; num++) {
+                if (isPrime(num)) {
+                    yield num;  // Produce the prime number
+                }
+            }
+        }
+
+        // Helper function to check if a number is prime
+        function isPrime(n) {
+            if (n < 2) return false;
+            for (let i = 2; i <= Math.sqrt(n); i++) {
+                if (n % i === 0) return false;
+            }
+            return true;
+        }
+
+        // Function to handle user input and display prime numbers
+        function generatePrimes() {
+            const start = parseInt(document.getElementById('start').value);
+            const end = parseInt(document.getElementById('end').value);
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            // Clear previous output
+            resultDiv.innerHTML = '';
+            errorDiv.innerHTML = '';
+
+            // Validate input
+            if (isNaN(start) || isNaN(end)) {
+                errorDiv.innerHTML = "Please enter valid start and end numbers.";
+                return;
+            }
+
+            if (start >= end || start < 2) {
+                errorDiv.innerHTML = "Start should be less than end and at least 2.";
+                return;
+            }
+
+            // Create prime number generator
+            const primes = primeGenerator(start, end);
+
+            // Collect primes and display them
+            let result = [];
+            for (let prime of primes) {
+                result.push(prime);
+            }
+
+            if (result.length > 0) {
+                resultDiv.innerHTML = `Prime numbers between ${start} and ${end}: ${result.join(", ")}`;
+            } else {
+                resultDiv.innerHTML = `No prime numbers found between ${start} and ${end}.`;
+            }
+        }
+    </script>
+</body>
+</html>

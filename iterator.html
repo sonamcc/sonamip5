@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Square Numbers Using Custom Iterator</title>
+</head>
+<body>
+    <h1>Square Numbers Using Custom Iterator</h1>
+
+    <label for="numbers">Enter numbers (comma-separated): </label>
+    <input type="text" id="numbers" placeholder="e.g., 1, 2, 3, 4" />
+    <button onclick="processNumbers()">Square Numbers</button>
+    
+    <div id="error" style="color:red; margin-top:10px;"></div>
+    <div id="result" style="margin-top:10px;"></div>
+
+    <script>
+        // Function to get and process user input
+        function processNumbers() {
+            const input = document.getElementById('numbers').value;
+            const errorDiv = document.getElementById('error');
+            const resultDiv = document.getElementById('result');
+            
+            // Clear previous error or results
+            errorDiv.textContent = '';
+            resultDiv.innerHTML = '';
+
+            // Convert input to array of numbers
+            let numberArray = input.split(',').map(num => parseFloat(num.trim()));
+
+            // Validate the input to ensure all entries are valid numbers
+            if (numberArray.some(isNaN)) {
+                errorDiv.textContent = "Please enter valid numbers separated by commas.";
+            } else {
+                // Use custom iterator to square the numbers
+                const squaredNumbers = createSquareIterator(numberArray);
+                
+                resultDiv.innerHTML = '<h3>Squared Numbers:</h3>';
+                
+                for (let square of squaredNumbers) {
+                    resultDiv.innerHTML += `<p>${square}</p>`;
+                }
+            }
+        }
+
+        // Custom iterator function to create an iterator that squares numbers
+        function createSquareIterator(arr) {
+            return {
+                numbers: arr,
+                
+                [Symbol.iterator]() {
+                    let index = 0;
+                    const nums = this.numbers;
+                    
+                    return {
+                        next() {
+                            if (index < nums.length) {
+                                let value = nums[index] ** 2; // Squaring the number using the exponentiation operator
+                                index++;
+                                return { value, done: false };
+                            } else {
+                                return { done: true };
+                            }
+                        }
+                    };
+                }
+            };
+        }
+    </script>
+</body>
+</html>
